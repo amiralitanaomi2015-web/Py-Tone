@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}جزوه‌ها{% endblock %}
+{% block content %}
+<div class="grid-2">
+  <div>
+    <div class="section-title"><h2>جزوه‌های من</h2></div>
+    {% if notes %}
+      {% for n in notes %}
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:start;">
+          <div>
+            <h3 style="margin-bottom:4px;">{{ n.title }}</h3>
+            {% if n.topic %}<span class="badge badge-level">{{ n.topic }}</span>{% endif %}
+          </div>
+          <form method="POST" action="{{ url_for('delete_note', note_id=n.id) }}">
+            <button type="submit" class="btn btn-ghost" style="padding:6px 14px;font-size:12px;">حذف</button>
+          </form>
+        </div>
+        <p style="white-space:pre-wrap;color:var(--text);margin-top:10px;">{{ n.content }}</p>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="card"><p>هنوز جزوه‌ای نساختی. از فرم کنار برای ساخت اولین جزوه‌ات استفاده کن.</p></div>
+    {% endif %}
+  </div>
+
+  <div>
+    <div class="card">
+      <h3>جزوه‌ی جدید</h3>
+      <form method="POST">
+        <label>عنوان</label>
+        <input type="text" name="title" required>
+        <label>موضوع</label>
+        <input type="text" name="topic" placeholder="مثلا: توابع">
+        <label>متن جزوه</label>
+        <textarea name="content"></textarea>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:18px;">ذخیره‌ی جزوه</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

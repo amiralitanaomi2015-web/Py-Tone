@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}نتیجه‌ی کوییز{% endblock %}
+{% block content %}
+<div class="card" style="max-width:700px;margin:0 auto;">
+  <div class="score-banner">
+    <div class="big">{{ score }}/{{ total }}</div>
+    <p>نتیجه‌ی شما در «{{ quiz.title }}»</p>
+  </div>
+
+  {% for r in results %}
+  <div class="result-row {{ 'correct' if r.correct else 'wrong' }}" style="padding:14px;border-radius:8px;margin-bottom:10px;">
+    <p style="color:var(--text);margin:0 0 6px;font-weight:600;">{{ r.question.text }}</p>
+    <p style="margin:0;font-size:13.5px;">
+      پاسخ تو: {{ r.chosen|upper if r.chosen else '—' }} &middot;
+      پاسخ درست: {{ r.question.correct_option|upper }}
+    </p>
+    {% if r.question.explanation %}<p style="margin:6px 0 0;font-size:13px;">{{ r.question.explanation }}</p>{% endif %}
+  </div>
+  {% endfor %}
+
+  <a href="{{ url_for('quizzes') }}" class="btn btn-ghost btn-block">بازگشت به کوییزها</a>
+</div>
+{% endblock %}

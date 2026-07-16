@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}آموزش{% endblock %}
+{% block content %}
+<div class="section-title"><h2>مسیر یادگیری پایتون</h2></div>
+<div class="article-list">
+  {% for a in articles %}
+  <a href="{{ url_for('article_detail', slug=a.slug) }}" class="article-row">
+    <div class="article-body">
+      <h3>{{ a.title }}</h3>
+      <p>{{ a.summary }}</p>
+    </div>
+    <div>
+      <span class="badge badge-level">{{ a.level }}</span>
+      {% if not a.is_free %}<span class="badge badge-locked">پلن ویژه</span>{% else %}<span class="badge badge-free">رایگان</span>{% endif %}
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

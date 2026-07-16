@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Py Tone{% endblock %} | Py Tone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="{{ url_for('index') }}" class="brand">
+      <span class="brand-mark">Py</span><span class="brand-mark accent">Tone</span>
+    </a>
+
+    {% if user %}
+    <div class="nav-links">
+      <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint=='dashboard' }}">داشبورد</a>
+      <a href="{{ url_for('learn') }}" class="{{ 'active' if request.endpoint in ['learn','article_detail'] }}">آموزش</a>
+      <a href="{{ url_for('quizzes') }}" class="{{ 'active' if request.endpoint in ['quizzes','quiz_take','quiz_result'] }}">کوییز</a>
+      <a href="{{ url_for('notes') }}" class="{{ 'active' if request.endpoint=='notes' }}">جزوه‌ها</a>
+      <a href="{{ url_for('playground') }}" class="{{ 'active' if request.endpoint=='playground' }}">پلی‌گراند</a>
+      <a href="{{ url_for('methods_page') }}" class="{{ 'active' if request.endpoint=='methods_page' }}">جست‌وجوی متد</a>
+      <a href="{{ url_for('ai_tutor_page') }}" class="{{ 'active' if request.endpoint=='ai_tutor_page' }}">معلم هوش مصنوعی</a>
+      <a href="{{ url_for('plans') }}" class="plan-link {{ 'active' if request.endpoint=='plans' }}">پلن‌ها</a>
+    </div>
+    <div class="nav-user">
+      {% if remaining is not none %}
+      <span class="timer-pill" id="usage-timer" data-remaining="{{ remaining }}">⏱ <span id="timer-text">--:--</span></span>
+      {% endif %}
+      <a href="{{ url_for('profile') }}" class="user-chip">{{ user.first_name }} <small>({{ user.plan }})</small></a>
+      <a href="{{ url_for('logout') }}" class="logout-btn">خروج</a>
+    </div>
+    {% else %}
+    <div class="nav-links">
+      <a href="{{ url_for('login') }}">ورود</a>
+      <a href="{{ url_for('register') }}" class="cta-small">شروع رایگان</a>
+    </div>
+    {% endif %}
+  </div>
+</nav>
+
+<main class="page">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-stack">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <p>Py Tone &middot; ساخته‌شده توسط لیولاف استودیو &middot; آموزش پایتون از صفر تا صد با هوش مصنوعی</p>
+</footer>
+
+{% if user %}
+<script>
+// شمارنده‌ی زمان استفاده‌ی روزانه برای پلن‌های رایگان
+(function () {
+  const pill = document.getElementById('usage-timer');
+  if (!pill) return;
+  let remaining = parseInt(pill.dataset.remaining, 10);
+  const textEl = document.getElementById('timer-text');
+
+  function render() {
+    if (remaining === null || isNaN(remaining)) return;
+    const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+    const s = Math.floor(remaining % 60).toString().padStart(2, '0');
+    textEl.textContent = m + ':' + s;
+    if (remaining <= 60) pill.classList.add('timer-warning');
+  }
+  render();
+
+  setInterval(function () {
+    remaining = Math.max(0, remaining - 5);
+    render();
+    if (remaining <= 0) {
+      window.location.href = "{{ url_for('time_up') }}";
+      return;
+    }
+    fetch("{{ url_for('usage_ping') }}", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({seconds: 5})
+    }).then(r => r.json()).then(data => {
+      if (typeof data.remaining === 'number') {
+        remaining = data.remaining;
+        render();
+      }
+    }).catch(() => {});
+  }, 5000);
+})();
+</script>
+{% endif %}
+
+</body>
+</html>

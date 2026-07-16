@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}پلن‌ها{% endblock %}
+{% block content %}
+<div class="section-title"><h2>پلن‌های رایگان</h2></div>
+<div class="plan-grid">
+  {% for key, p in free_plans.items() %}
+  <div class="card plan-card">
+    <div class="plan-tag">رایگان</div>
+    <h3>{{ p.label }}</h3>
+    <div class="plan-price">{{ p.daily_minutes }} دقیقه در روز</div>
+    <p style="font-size:13px;">{{ p.desc }}</p>
+    <ul class="plan-feature-list">
+      {% for f in p.features %}<li>✓ {{ feature_labels.get(f, f) }}</li>{% endfor %}
+    </ul>
+    {% if user.plan == key and not user.is_paid_plan %}
+      <span class="badge badge-free" style="text-align:center;">پلن فعلی تو</span>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+<div class="section-title"><h2>پلن‌های ویژه (غیررایگان)</h2></div>
+<div class="plan-grid">
+  {% for key, p in paid_plans.items() %}
+  <div class="card plan-card {{ 'golden' if key == 'Golden' }}">
+    <div class="plan-tag">{{ 'بدون محدودیت' if p.daily_minutes is none else 'دقیقه‌شمار' }}</div>
+    <h3>{{ p.label }}</h3>
+    <div class="plan-price">{{ 'زمان نامحدود' if p.daily_minutes is none else (p.daily_minutes ~ ' دقیقه در روز') }}</div>
+    <ul class="plan-feature-list">
+      {% for f in p.features %}<li>✓ {{ feature_labels.get(f, f) }}</li>{% endfor %}
+    </ul>
+    {% if user.plan == key and user.is_paid_plan %}
+      <span class="badge badge-free" style="text-align:center;">پلن فعلی تو</span>
+    {% else %}
+      <a href="{{ url_for('purchase', plan_name=key) }}" class="btn btn-primary btn-block">خرید پلن {{ p.label }}</a>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

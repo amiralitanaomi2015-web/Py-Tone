@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}درخواست ثبت شد{% endblock %}
+{% block content %}
+<div class="center-box">
+  <h1>✅ درخواست خرید پلن {{ plan_name }} ثبت شد</h1>
+  <p>اطلاعات تو برای تیم لیولاف ارسال شد. بعد از بررسی و تایید (معمولاً چند روز)،
+     پلن به‌صورت خودکار روی حساب تو فعال می‌شود.</p>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-mint">بازگشت به داشبورد</a>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}{{ quiz.title }}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:700px;margin:0 auto;">
+  <h2>{{ quiz.title }}</h2>
+  <form method="POST">
+    {% for q in quiz.questions %}
+    <div class="quiz-question">
+      <p class="q-text">{{ loop.index }}. {{ q.text }}</p>
+      <label class="option-row"><input type="radio" name="q{{ q.id }}" value="a" required> {{ q.option_a }}</label>
+      <label class="option-row"><input type="radio" name="q{{ q.id }}" value="b"> {{ q.option_b }}</label>
+      <label class="option-row"><input type="radio" name="q{{ q.id }}" value="c"> {{ q.option_c }}</label>
+      <label class="option-row"><input type="radio" name="q{{ q.id }}" value="d"> {{ q.option_d }}</label>
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary btn-block">ثبت پاسخ‌ها</button>
+  </form>
+</div>
+{% endblock %}

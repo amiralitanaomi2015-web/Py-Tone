@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}صفحه‌ی اصلی{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-text">
+    <div class="eyebrow">آموزش پایتون از صفر تا صد با هوش مصنوعی</div>
+    <h1>پایتون یاد بگیر با <span class="hl">آهنگِ خودت</span></h1>
+    <p class="lead">
+      Py Tone یک پلتفرم کامل آموزش پایتون است؛ با معلم هوش مصنوعی اختصاصی در هر جلسه،
+      مقاله، کوییز، جزوه، محیط اجرای کد و ابزار هوشمند جست‌وجوی متد — همه در یک‌جا،
+      به بیش از ۴۰ زبان.
+    </p>
+    <div class="hero-cta">
+      <a href="{{ url_for('register') }}" class="btn btn-primary">شروع رایگان</a>
+      <a href="{{ url_for('login') }}" class="btn btn-ghost">ورود به حساب</a>
+    </div>
+  </div>
+  <div class="tone-waves" aria-hidden="true">
+    <div class="bar" style="height:40%; animation-delay:0s"></div>
+    <div class="bar" style="height:70%; animation-delay:.1s"></div>
+    <div class="bar" style="height:100%; animation-delay:.2s"></div>
+    <div class="bar" style="height:55%; animation-delay:.3s"></div>
+    <div class="bar" style="height:85%; animation-delay:.4s"></div>
+    <div class="bar" style="height:35%; animation-delay:.5s"></div>
+    <div class="bar" style="height:65%; animation-delay:.6s"></div>
+  </div>
+</section>
+
+<div class="section-title"><h2>۱۰ قابلیت ویژه‌ی Py Tone</h2></div>
+<div class="feature-grid">
+  <div class="feature-card">
+    <span class="feature-num">۰۱</span>
+    <h3>معلم هوش مصنوعی شخصی</h3>
+    <p>در هر جلسه یک معلم اختصاصی، صبور و همیشه در دسترس که قدم‌به‌قدم درس می‌ده.</p>
+  </div>
+  <div class="feature-card">
+    <span class="feature-num">۰۲</span>
+    <h3>جست‌وجوی نصفه‌نویسی متد</h3>
+    <p>اسم یک متد رو نصفه بنویس، Py Tone متدهای مشابه رو با توضیح و کاربرد نشونت می‌ده.</p>
+  </div>
+  <div class="feature-card">
+    <span class="feature-num">۰۳</span>
+    <h3>پلی‌گراند اجرای زنده‌ی کد</h3>
+    <p>کد پایتونت رو همین‌جا بنویس و اجرا کن، بدون نیاز به نصب هیچ برنامه‌ای.</p>
+  </div>
+  <div class="feature-card">
+    <span class="feature-num">۰۴</span>
+    <h3>جزوه‌ساز شخصی</h3>
+    <p>جزوه‌های خودت رو بساز، ذخیره کن و هر وقت خواستی بهشون برگرد.</p>
+  </div>
+  <div class="feature-card">
+    <span class="feature-num">۰۵</span>
+    <h3>کوییز و آزمون هوشمند</h3>
+    <p>سوالات امتحانی متنوع با تصحیح آنی و توضیح پاسخ درست.</p>
+  </div>
+  <div class="feature-card">
+    <span class="feature-num">۰۶</span>
+    <h3>پشتیبانی از ۴۰ زبان</h3>
+    <p>رابط کاربری و معلم هوش مصنوعی به زبان دلخواه تو صحبت می‌کنه.</p>
+  </div>
+  <div class="feature-card">
+    <span class="feature-num">۰۷</span>
+    <h3>مسیر یادگیری مرحله‌ای</h3>
+    <p>از مبانی تا مفاهیم پیشرفته، مقاله‌ها به ترتیب منطقی چیده شدن.</p>
+  </div>
+  <div class="feature-card">
+    <span class="feature-num">۰۸</span>
+    <h3>شمارنده‌ی شفاف زمان</h3>
+    <p>در پلن رایگان همیشه می‌دونی چقدر زمان استفاده برات مونده.</p>
+  </div>
+  <div class="feature-card">
+    <span class="feature-num">۰۹</span>
+    <h3>داشبورد پیشرفت</h3>
+    <p>نمرات کوییزها، جزوه‌های اخیر و فعالیتت رو یک‌جا ببین.</p>
+  </div>
+  <div class="feature-card">
+    <span class="feature-num">۱۰</span>
+    <h3>۹ سطح پلن، برای هر بودجه‌ای</h3>
+    <p>از پلن‌های رایگان تا Golden با دسترسی کاملاً نامحدود.</p>
+  </div>
+</div>
+
+<section class="center-box">
+  <h2>آماده‌ای شروع کنی؟</h2>
+  <p>ثبت‌نام رایگانه و همین الان می‌تونی اولین درست رو با هوش مصنوعی شروع کنی.</p>
+  <a href="{{ url_for('register') }}" class="btn btn-mint">ساخت حساب رایگان</a>
+</section>
+
+{% endblock %}

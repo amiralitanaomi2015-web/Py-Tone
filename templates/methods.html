@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}جست‌وجوی متد{% endblock %}
+{% block content %}
+<div class="section-title"><h2>جست‌وجوی هوشمند متد پایتون</h2></div>
+<p style="margin-top:-10px;">اسم یک متد رو نصفه بنویس (مثلا <code>app</code> یا <code>spl</code>) تا متدهای مشابه رو با توضیح ببینی.</p>
+
+<div class="card method-search-box">
+  <input type="text" id="method-input" placeholder="مثلا: app , spl , sor ..." autofocus>
+</div>
+
+<div class="method-results" id="method-results"></div>
+
+<script>
+const input = document.getElementById('method-input');
+const resultsBox = document.getElementById('method-results');
+let debounceTimer;
+
+input.addEventListener('input', function () {
+  clearTimeout(debounceTimer);
+  const q = this.value.trim();
+  if (!q) { resultsBox.innerHTML = ''; return; }
+  debounceTimer = setTimeout(async () => {
+    const res = await fetch(`{{ url_for('methods_search_api') }}?q=` + encodeURIComponent(q));
+    const data = await res.json();
+    renderResults(data.results);
+  }, 200);
+});
+
+function renderResults(results) {
+  if (!results.length) {
+    resultsBox.innerHTML = '<p style="color:var(--text-muted)">چیزی پیدا نشد.</p>';
+    return;
+  }
+  resultsBox.innerHTML = results.map(r => `
+    <div class="method-card">
+      <span class="method-sig">${r.signature}<span class="method-owner">${r.owner}</span></span>
+      <p class="method-doc">${r.doc}</p>
+    </div>
+  `).join('');
+}
+</script>
+{% endblock %}

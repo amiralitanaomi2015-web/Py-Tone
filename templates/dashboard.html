@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}داشبورد{% endblock %}
+{% block content %}
+
+<div class="section-title">
+  <h2>سلام {{ user.first_name }} 👋</h2>
+  <span class="badge {{ 'badge-free' if not user.is_paid_plan else 'badge-locked' }}">پلن فعلی: {{ user.plan }}</span>
+</div>
+
+{% if remaining is not none %}
+<div class="card" style="margin-bottom:24px;">
+  <p style="margin:0;color:var(--text);">
+    زمان باقی‌مانده‌ی امروز از پلن رایگان: <strong style="color:var(--accent-gold)">{{ (remaining // 60) }} دقیقه</strong>
+  </p>
+  <div class="progress-bar" style="margin-top:10px;">
+    <span style="width: {{ (remaining / user.daily_limit_seconds() * 100) if user.daily_limit_seconds() else 100 }}%"></span>
+  </div>
+  <p style="margin:10px 0 0;font-size:13px;"><a href="{{ url_for('plans') }}" class="muted-link">می‌خوای محدودیت نداشته باشی؟ پلن‌ها رو ببین →</a></p>
+</div>
+{% endif %}
+
+<div class="grid-2">
+  <div>
+    <div class="card">
+      <h3>ادامه‌ی یادگیری</h3>
+      <div class="article-list">
+        {% for a in articles[:4] %}
+        <a href="{{ url_for('article_detail', slug=a.slug) }}" class="article-row">
+          <div class="article-body">
+            <h3>{{ a.title }}</h3>
+            <p>{{ a.summary }}</p>
+          </div>
+          <span class="badge badge-level">{{ a.level }}</span>
+        </a>
+        {% endfor %}
+      </div>
+      <p style="margin-top:14px;"><a href="{{ url_for('learn') }}" class="muted-link">مشاهده‌ی همه‌ی مقاله‌ها →</a></p>
+    </div>
+
+    <div class="card">
+      <h3>کوییزهای اخیر تو</h3>
+      {% if attempts %}
+        {% for att in attempts %}
+        <div class="option-row" style="cursor:default;">
+          <span>{{ att.quiz.title }}</span>
+          <span style="margin-inline-start:auto;color:var(--accent-mint);">{{ att.score }}/{{ att.total }}</span>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p>هنوز کوییزی نداده‌ای. <a href="{{ url_for('quizzes') }}" class="muted-link">یکی رو امتحان کن</a></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div>
+    <div class="card">
+      <h3>دسترسی سریع</h3>
+      <a href="{{ url_for('ai_tutor_page') }}" class="btn btn-mint btn-block" style="margin-bottom:10px;">💬 صحبت با معلم هوش مصنوعی</a>
+      <a href="{{ url_for('playground') }}" class="btn btn-ghost btn-block" style="margin-bottom:10px;">▶ اجرای کد در پلی‌گراند</a>
+      <a href="{{ url_for('methods_page') }}" class="btn btn-ghost btn-block">🔍 جست‌وجوی متد پایتون</a>
+    </div>
+
+    <div class="card">
+      <h3>جزوه‌های اخیر</h3>
+      {% if recent_notes %}
+        {% for n in recent_notes %}
+        <div class="option-row" style="cursor:default;"><span>{{ n.title }}</span></div>
+        {% endfor %}
+      {% else %}
+        <p>هنوز جزوه‌ای نساختی.</p>
+      {% endif %}
+      <p style="margin-top:10px;"><a href="{{ url_for('notes') }}" class="muted-link">مدیریت جزوه‌ها →</a></p>
+    </div>
+
+    {% if announcements %}
+    <div class="card">
+      <h3>اعلان‌ها</h3>
+      {% for an in announcements %}
+      <div style="padding:10px 0;border-bottom:1px dashed var(--border);">
+        <strong style="font-size:13.5px;">{{ an.title }}</strong>
+        <p style="font-size:13px;margin:4px 0 0;">{{ an.body }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
