@@ -171,6 +171,25 @@ class PurchaseRequest(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+<<<<<<< HEAD
+=======
+class SupportMessage(db.Model):
+    """چت پشتیبانی بین کاربر و اعضای لیولاف (جدا از چت با معلم هوش مصنوعی).
+    توسط کاربر در برنامه‌ی اصلی و توسط اعضا در برنامه‌ی مدیریت خوانده/نوشته می‌شود."""
+    __tablename__ = "support_messages"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    admin_id = db.Column(db.Integer, nullable=True)  # به admin_users در برنامه‌ی مدیریت اشاره دارد
+
+    sender = db.Column(db.String(10))   # 'user' | 'admin'
+    content = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_read_by_admin = db.Column(db.Boolean, default=False)
+    is_read_by_user = db.Column(db.Boolean, default=False)
+
+
+>>>>>>> 7f8cd5a (Adding better files to the platform)
 class Announcement(db.Model):
     """اعلان‌هایی که تیم پشتیبانی/مدیریت برای کاربران ارسال می‌کند"""
     __tablename__ = "announcements"

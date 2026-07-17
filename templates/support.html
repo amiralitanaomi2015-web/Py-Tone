@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}پشتیبانی{% endblock %}
+{% block content %}
+<div class="section-title"><h2>چت پشتیبانی با تیم لیولاف</h2></div>
+
+<div class="chat-wrap">
+  <div class="chat-messages" id="chat-messages">
+    {% for m in messages %}
+      <div class="chat-bubble {{ 'user' if m.sender=='user' else 'assistant' }}">{{ m.content }}</div>
+    {% endfor %}
+    {% if not messages %}
+      <div class="chat-bubble assistant">سلام! هر سوال یا مشکلی داشتی همین‌جا برامون بنویس، تیم لیولاف بهت پاسخ می‌ده.</div>
+    {% endif %}
+  </div>
+  <div class="chat-input-row">
+    <textarea id="chat-input" placeholder="پیامت رو بنویس..."></textarea>
+    <button id="chat-send" class="btn btn-mint">ارسال</button>
+  </div>
+</div>
+
+<script>
+const msgBox = document.getElementById('chat-messages');
+const input = document.getElementById('chat-input');
+const sendBtn = document.getElementById('chat-send');
+
+function renderAll(messages) {
+  msgBox.innerHTML = messages.map(m =>
+    `<div class="chat-bubble ${m.sender === 'user' ? 'user' : 'assistant'}">${m.content}</div>`
+  ).join('');
+  msgBox.scrollTop = msgBox.scrollHeight;
+}
+
+async function poll() {
+  try {
+    const res = await fetch("{{ url_for('support_poll') }}");
+    const data = await res.json();
+    renderAll(data.messages);
+  } catch (e) {}
+}
+
+async function send() {
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  sendBtn.disabled = true;
+  try {
+    await fetch("{{ url_for('support_send') }}", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: text})
+    });
+    await poll();
+  } finally {
+    sendBtn.disabled = false;
+  }
+}
+
+sendBtn.addEventListener('click', send);
+input.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+});
+
+msgBox.scrollTop = msgBox.scrollHeight;
+setInterval(poll, 6000);
+</script>
+{% endblock %}

@@ -1,23 +1,41 @@
+<<<<<<< HEAD
 # Py Tone — Main Application
 
 A Python learning platform from scratch with AI. This is just the “main application” (user side);
 The “remote management application” will be built in the next phase and the two will be connected to the database.
 
 ## Run
+=======
+# Py Tone — برنامه‌ی اصلی
+
+پلتفرم آموزش پایتون از صفر تا صد با هوش مصنوعی. این فقط «برنامه‌ی اصلی» (سمت کاربر) است؛
+«برنامه‌ی مدیریت از راه دور» در فاز بعدی ساخته می‌شود و این دو با پایگاه‌داده به هم متصل خواهند شد.
+
+## اجرا
+>>>>>>> 7f8cd5a (Adding better files to the platform)
 
 ```bash
 cd pytone
 python3 -m venv venv
+<<<<<<< HEAD
 source venv/bin/activate # Windows: venv\Scripts\activate
+=======
+source venv/bin/activate        # ویندوز: venv\Scripts\activate
+>>>>>>> 7f8cd5a (Adding better files to the platform)
 pip install -r requirements.txt
 python3 app.py
 ```
 
+<<<<<<< HEAD
 Then open the following address in the browser:
+=======
+سپس آدرس زیر را در مرورگر باز کنید:
+>>>>>>> 7f8cd5a (Adding better files to the platform)
 ```
 http://127.0.0.1:5000
 ```
 
+<<<<<<< HEAD
 ## Important settings (environment variables)
 
 | Variable | Description |
@@ -65,3 +83,58 @@ languages.
 Py Tone remote management program (Livelove admin panel): blocking users, manually approving
 purchases, sending notifications, turning the entire platform on/off, support chat, etc. — which will be created in a separate file and
 with a shared database.
+=======
+## تنظیمات مهم (متغیرهای محیطی)
+
+| متغیر | توضیح |
+|---|---|
+| `ANTHROPIC_API_KEY` | برای فعال شدن واقعی معلم هوش مصنوعی. بدون آن، پاسخ نمونه (fallback) نمایش داده می‌شود. |
+| `PYTONE_SMTP_HOST` / `PYTONE_SMTP_PORT` | آدرس و پورت سرور SMTP برای ارسال ایمیل درخواست خرید |
+| `PYTONE_SMTP_USER` / `PYTONE_SMTP_PASS` | اطلاعات ورود به ایمیل ارسال‌کننده |
+| `PYTONE_NOTIFY_EMAIL` | ایمیلی که درخواست‌های خرید پلن به آن ارسال می‌شود (پیش‌فرض: luolaf.stoudio@gmail.com) |
+| `PYTONE_SECRET_KEY` | کلید امنیتی Flask (برای Production حتما تغییر بدهید) |
+
+اگر SMTP تنظیم نشود، برنامه کرش نمی‌کند؛ فقط متن ایمیل را در ترمینال چاپ می‌کند تا در حالت توسعه هم قابل تست باشد.
+
+## ساختار فایل‌ها
+
+```
+pytone/
+├── app.py              # همه‌ی route ها و منطق اصلی
+├── config.py            # تعریف پلن‌ها (۶ رایگان + ۹ پولی) و تنظیمات
+├── models.py             # مدل‌های پایگاه‌داده (SQLAlchemy)
+├── method_finder.py      # ابزار جست‌وجوی نصفه‌نویسی متد پایتون
+├── playground_runner.py  # اجرای امن‌شده‌ی کد کاربر
+├── ai_tutor.py            # اتصال به Claude API برای معلم هوش مصنوعی
+├── mailer.py              # ارسال ایمیل درخواست خرید
+├── seed_data.py           # داده‌ی اولیه (مقاله + کوییز نمونه)
+├── templates/             # صفحات HTML (شامل صفحه‌ی پشتیبانی /support)
+├── static/css/style.css   # طراحی و رنگ‌بندی
+└── data/pytone.db          # پایگاه‌داده‌ی SQLite (خودکار ساخته می‌شود)
+```
+
+## نکات مهم امنیتی و محدودیت‌های این نسخه
+
+1. **پلی‌گراند اجرای کد**: کد کاربر با subprocess و timeout اجرا می‌شود و import های
+   حساس (`os`, `subprocess`, `socket`, ...) بلاک شده‌اند. این یک sandbox آموزشیِ اولیه است؛
+   برای Production واقعی توصیه می‌شود از یک سرویس ایزوله‌ی قوی‌تر مثل Docker یک‌بارمصرف یا
+   Piston/Judge0 استفاده شود.
+2. **بدون درِ پشتی**: طبق درخواست اولیه، مکانیزم «کد مخفی برای باز کردن هر اکانتی» در این
+   برنامه پیاده‌سازی **نشده** است، چون یک آسیب‌پذیری امنیتی جدی محسوب می‌شود. مدیریت پلن‌ها و
+   دسترسی کاربران باید از طریق پنل مدیریت رسمی (فاز بعدی) و با احراز هویت درست انجام شود.
+3. **۴۰ زبان**: ساختار چندزبانه (`config.py -> LANGUAGES`) برای ۴۰ زبان آماده است و کاربر
+   می‌تواند زبان ترجیحی خود را در پروفایل انتخاب کند؛ معلم هوش مصنوعی به همان زبان پاسخ
+   می‌دهد. ترجمه‌ی کامل رابط کاربری (متن‌های ثابت سایت) فعلاً فقط فارسی است و برای بقیه‌ی
+   زبان‌ها باید فایل‌های ترجمه اضافه شود.
+4. **پایگاه‌داده**: فعلاً SQLite (فایل `data/pytone.db`) استفاده شده که برای توسعه و تست
+   عالی است؛ برای هزاران کاربر همزمان بهتر است به PostgreSQL مهاجرت شود.
+
+## برنامه‌ی دوم: پنل مدیریت از راه دور
+
+پوشه‌ی جداگانه‌ی `pytone-admin` همین کنار این پروژه ساخته شده و به همان فایل
+پایگاه‌داده وصل می‌شود (`pytone/data/pytone.db`). با آن اعضای تیم لیولاف می‌توانند:
+کاربران را مسدود/رفع‌مسدود کنند، خرید پلن را تایید/رد کنند، اعلان بفرستند، با
+کاربران چت پشتیبانی کنند، و کل پلتفرم را روشن/خاموش کنند. راهنمای کامل در
+`pytone-admin/README.md` است. **این دو پوشه باید کنار هم باشند** تا مسیر نسبی
+پایگاه‌داده‌ی مشترک درست کار کند.
+>>>>>>> 7f8cd5a (Adding better files to the platform)

@@ -15,7 +15,12 @@ from flask import (Flask, render_template, request, redirect, url_for,
 
 from config import Config
 from models import (db, User, UsageLog, Article, Quiz, Question, QuizAttempt,
+<<<<<<< HEAD
                      Note, ChatMessage, PurchaseRequest, Announcement, PlatformStatus)
+=======
+                     Note, ChatMessage, PurchaseRequest, Announcement, PlatformStatus,
+                     SupportMessage)
+>>>>>>> 7f8cd5a (Adding better files to the platform)
 from method_finder import search_methods
 from playground_runner import run_user_code
 from ai_tutor import ask_ai_tutor
@@ -32,12 +37,40 @@ def markdown_filter(text):
     import markdown as md
     return md.markdown(text or "", extensions=["fenced_code"])
 
+<<<<<<< HEAD
 with app.app_context():
     db.create_all()
     seed_data.seed_if_empty()
     if PlatformStatus.query.first() is None:
         db.session.add(PlatformStatus(is_online=True))
         db.session.commit()
+=======
+def _init_db():
+    """ساخت جدول‌ها؛ اگر برنامه‌ی مدیریت هم‌زمان همین کار را انجام می‌دهد (چون در
+    یک فایل SQLite مشترک هستند)، خطای 'table already exists' را نادیده می‌گیریم."""
+    import time
+    from sqlalchemy.exc import OperationalError
+
+    for attempt in range(5):
+        try:
+            db.create_all()
+            break
+        except OperationalError:
+            db.session.rollback()
+            time.sleep(0.3)
+
+    seed_data.seed_if_empty()
+    if PlatformStatus.query.first() is None:
+        try:
+            db.session.add(PlatformStatus(is_online=True))
+            db.session.commit()
+        except OperationalError:
+            db.session.rollback()
+
+
+with app.app_context():
+    _init_db()
+>>>>>>> 7f8cd5a (Adding better files to the platform)
 
 
 # ---------------------------------------------------------------------------
@@ -436,6 +469,47 @@ def purchase(plan_name):
 
 
 # ---------------------------------------------------------------------------
+<<<<<<< HEAD
+=======
+# پشتیبانی (چت با اعضای تیم لیولاف)
+# ---------------------------------------------------------------------------
+
+@app.route("/support")
+@login_required
+def support():
+    u = current_user()
+    SupportMessage.query.filter_by(user_id=u.id, sender="admin").update({"is_read_by_user": True})
+    db.session.commit()
+    messages = SupportMessage.query.filter_by(user_id=u.id).order_by(SupportMessage.created_at).all()
+    return render_template("support.html", user=u, messages=messages)
+
+
+@app.route("/api/support/send", methods=["POST"])
+@login_required
+def support_send():
+    u = current_user()
+    message = request.json.get("message", "").strip()
+    if not message:
+        return jsonify({"error": "پیام خالی است."}), 400
+    msg = SupportMessage(user_id=u.id, sender="user", content=message, is_read_by_admin=False, is_read_by_user=True)
+    db.session.add(msg)
+    db.session.commit()
+    return jsonify({"ok": True})
+
+
+@app.route("/api/support/poll")
+@login_required
+def support_poll():
+    u = current_user()
+    messages = SupportMessage.query.filter_by(user_id=u.id).order_by(SupportMessage.created_at).all()
+    return jsonify({"messages": [
+        {"sender": m.sender, "content": m.content, "created_at": m.created_at.strftime("%H:%M")}
+        for m in messages
+    ]})
+
+
+# ---------------------------------------------------------------------------
+>>>>>>> 7f8cd5a (Adding better files to the platform)
 # پروفایل
 # ---------------------------------------------------------------------------
 
