@@ -15,12 +15,8 @@ from flask import (Flask, render_template, request, redirect, url_for,
 
 from config import Config
 from models import (db, User, UsageLog, Article, Quiz, Question, QuizAttempt,
-<<<<<<< HEAD
-                     Note, ChatMessage, PurchaseRequest, Announcement, PlatformStatus)
-=======
                      Note, ChatMessage, PurchaseRequest, Announcement, PlatformStatus,
                      SupportMessage)
->>>>>>> 7f8cd5a (Adding better files to the platform)
 from method_finder import search_methods
 from playground_runner import run_user_code
 from ai_tutor import ask_ai_tutor
@@ -37,14 +33,6 @@ def markdown_filter(text):
     import markdown as md
     return md.markdown(text or "", extensions=["fenced_code"])
 
-<<<<<<< HEAD
-with app.app_context():
-    db.create_all()
-    seed_data.seed_if_empty()
-    if PlatformStatus.query.first() is None:
-        db.session.add(PlatformStatus(is_online=True))
-        db.session.commit()
-=======
 def _init_db():
     """ساخت جدول‌ها؛ اگر برنامه‌ی مدیریت هم‌زمان همین کار را انجام می‌دهد (چون در
     یک فایل SQLite مشترک هستند)، خطای 'table already exists' را نادیده می‌گیریم."""
@@ -70,7 +58,6 @@ def _init_db():
 
 with app.app_context():
     _init_db()
->>>>>>> 7f8cd5a (Adding better files to the platform)
 
 
 # ---------------------------------------------------------------------------
@@ -469,8 +456,6 @@ def purchase(plan_name):
 
 
 # ---------------------------------------------------------------------------
-<<<<<<< HEAD
-=======
 # پشتیبانی (چت با اعضای تیم لیولاف)
 # ---------------------------------------------------------------------------
 
@@ -509,7 +494,6 @@ def support_poll():
 
 
 # ---------------------------------------------------------------------------
->>>>>>> 7f8cd5a (Adding better files to the platform)
 # پروفایل
 # ---------------------------------------------------------------------------
 

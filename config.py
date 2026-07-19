@@ -5,6 +5,9 @@
 """
 
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  # اگر فایل .env کنار این فایل باشد، تنظیماتش را می‌خواند
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
